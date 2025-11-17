@@ -1,6 +1,28 @@
 import UIKit
 
 class InfoViewController: UIViewController {
+    
+    private lazy var infoLabel: UILabel = {
+        let infoLabel = UILabel()
+        infoLabel.text = "Это информационный экран"
+        infoLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        infoLabel.textAlignment = .center
+        infoLabel.numberOfLines = 0
+        infoLabel.translatesAutoresizingMaskIntoConstraints = false
+        return infoLabel
+    }()
+    
+    private lazy var showAlertButton: UIButton = {
+        let showAlertButton = UIButton(type: .system)
+        showAlertButton.setTitle("Показать Alert", for: .normal)
+        showAlertButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        showAlertButton.backgroundColor = .systemBlue
+        showAlertButton.setTitleColor(.white, for: .normal)
+        showAlertButton.layer.cornerRadius = 10
+        showAlertButton.addTarget(self, action: #selector(showAlertButtonTapped), for: .touchUpInside)
+        showAlertButton.translatesAutoresizingMaskIntoConstraints = false
+        return showAlertButton
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -8,7 +30,8 @@ class InfoViewController: UIViewController {
         title = "Информация"
         
         setupNavigationBar()
-        setupUI()
+        setupSubviews()
+        setupConstraints()
     }
     
     private func setupNavigationBar() {
@@ -23,38 +46,24 @@ class InfoViewController: UIViewController {
             closeButton.tintColor = .label
         }
     
-    private func setupUI() {
-            let infoLabel = UILabel()
-            infoLabel.text = "Это информационный экран"
-            infoLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-            infoLabel.textAlignment = .center
-            infoLabel.numberOfLines = 0
-            infoLabel.translatesAutoresizingMaskIntoConstraints = false
-            
-            let showAlertButton = UIButton(type: .system)
-            showAlertButton.setTitle("Показать Alert", for: .normal)
-            showAlertButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-            showAlertButton.backgroundColor = .systemBlue
-            showAlertButton.setTitleColor(.white, for: .normal)
-            showAlertButton.layer.cornerRadius = 10
-            showAlertButton.addTarget(self, action: #selector(showAlertButtonTapped), for: .touchUpInside)
-            showAlertButton.translatesAutoresizingMaskIntoConstraints = false
-            
+    private func setupSubviews() {
             view.addSubview(infoLabel)
             view.addSubview(showAlertButton)
-            
-            NSLayoutConstraint.activate([
-                infoLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                infoLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -60),
-                infoLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-                infoLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                
-                showAlertButton.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: 30),
-                showAlertButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                showAlertButton.widthAnchor.constraint(equalToConstant: 200),
-                showAlertButton.heightAnchor.constraint(equalToConstant: 50)
-            ])
         }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            infoLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            infoLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -60),
+            infoLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            infoLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            showAlertButton.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: 30),
+            showAlertButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            showAlertButton.widthAnchor.constraint(equalToConstant: 200),
+            showAlertButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
         
         @objc private func showAlertButtonTapped() {
             showCustomAlert()
