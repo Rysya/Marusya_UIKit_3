@@ -20,7 +20,6 @@ class InfoViewController: UIViewController {
             )
             
             navigationItem.rightBarButtonItem = closeButton
-            
             closeButton.tintColor = .label
         }
     

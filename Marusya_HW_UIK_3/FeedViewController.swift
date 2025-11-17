@@ -5,7 +5,7 @@ class FeedViewController: UIViewController {
     let samplePost = Post(
             title: "Пост от leon",
             text: "Это содержимое первого поста от leon в этом приложении. Здесь может быть длинный текст с интересной информацией, о том как leon счастливо живет или что-то в этом роде.",
-            img: UIImage(named: "leon")
+            imageName: "leon"
         )
     
     override func viewDidLoad() {
