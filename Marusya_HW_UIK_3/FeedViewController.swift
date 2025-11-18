@@ -2,7 +2,7 @@ import UIKit
 
 class FeedViewController: UIViewController {
     
-    let samplePost = Post(
+    private let samplePost = Post(
             title: "Пост от leon",
             text: "Это содержимое первого поста от leon в этом приложении. Здесь может быть длинный текст с интересной информацией, о том как leon счастливо живет или что-то в этом роде.",
             imageName: "leon"
