@@ -77,6 +77,8 @@ class ProfileHeaderView: UIView {
         return showStatusButton
     }()
     
+    
+    
     @objc private func setNewStatus() {
         var isFirstClick: Bool = true
         if isStatusVisibleOfTextFieldStatus {
