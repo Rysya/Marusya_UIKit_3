@@ -30,7 +30,6 @@ class FeedViewController: UIViewController {
         button.addTarget(self, action: #selector(showPostButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 48).isActive = true
-//        button.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8).isActive = true
         return button
     }()
     
@@ -48,7 +47,6 @@ class FeedViewController: UIViewController {
         button.addTarget(self, action: #selector(showPostButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 48).isActive = true
-//        button.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8).isActive = true
         return button
     }()
     

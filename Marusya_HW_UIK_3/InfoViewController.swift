@@ -41,7 +41,6 @@ class InfoViewController: UIViewController {
                 target: self,
                 action: #selector(closeButtonTapped)
             )
-            
             navigationItem.rightBarButtonItem = closeButton
             closeButton.tintColor = .label
         }

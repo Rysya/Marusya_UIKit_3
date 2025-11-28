@@ -76,7 +76,6 @@ class PostViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-
             contentTextView.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
             contentTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             contentTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
