@@ -4,12 +4,6 @@ class PostViewController: UIViewController {
     
     private let post: Post
     
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        return scrollView
-    }()
-    
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = post.title
@@ -30,12 +24,14 @@ class PostViewController: UIViewController {
         let postImageView = UIImageView()
         if let imageName = post.imageName, let image = UIImage(named: imageName) {
             postImageView.image = image
+            postImageView.heightAnchor.constraint(equalToConstant: 400).isActive = true
         } else {
             postImageView.tintColor = .gray
             postImageView.image = UIImage(systemName: "photo")
+            postImageView.heightAnchor.constraint(equalToConstant: 400).isActive = true
         }
         postImageView.contentMode = .scaleAspectFill
-        postImageView.clipsToBounds = true   // важно, иначе часть картинки может «вылезать»
+        postImageView.clipsToBounds = true
         postImageView.translatesAutoresizingMaskIntoConstraints = false
         return postImageView
     }()
@@ -47,7 +43,7 @@ class PostViewController: UIViewController {
         contentStackView.translatesAutoresizingMaskIntoConstraints = false
         return contentStackView
     }()
-    
+   
     private lazy var contentTextView: UIStackView = {
         let contentTextView = UIStackView(arrangedSubviews: [titleLabel, contentLabel])
         contentTextView.axis = .vertical
@@ -74,26 +70,19 @@ class PostViewController: UIViewController {
     }
     
     private func setupSubviews() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentStackView)
+        view.addSubview(postImageView)
+        view.addSubview(contentTextView)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            contentTextView.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
             contentTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             contentTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            contentStackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 10),
-            contentStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
-            contentStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0),
-            contentStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: 0),
-            postImageView.leadingAnchor.constraint(equalTo: contentStackView.leadingAnchor, constant: 0),
-            postImageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: 0),
+            postImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            postImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            postImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
     
