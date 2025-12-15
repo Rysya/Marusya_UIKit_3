@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tabBar = UITabBarController()
         tabBar.viewControllers = [createFeedUserController(), createProfileUserController()]
         tabBar.tabBar.backgroundColor = .white
-        tabBar.selectedIndex = 0
+        tabBar.selectedIndex = 1
         return tabBar
     }
 
