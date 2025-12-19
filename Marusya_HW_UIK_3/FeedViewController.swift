@@ -3,9 +3,12 @@ import UIKit
 class FeedViewController: UIViewController {
     
     private let samplePost = Post(
+            author: "leon",
             title: "Пост от leon",
-            text: "Это содержимое первого поста от leon в этом приложении. Здесь может быть длинный текст с интересной информацией, о том как leon счастливо живет или что-то в этом роде.",
-            imageName: "leon"
+            description: "Это содержимое первого поста от leon в этом приложении. Здесь может быть длинный текст с интересной информацией, о том как leon счастливо живет или что-то в этом роде.",
+            imageName: "leon",
+            likes: 120,
+            views: 5400
         )
     
     private let feedStackView: UIStackView = {

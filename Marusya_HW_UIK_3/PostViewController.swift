@@ -14,7 +14,7 @@ class PostViewController: UIViewController {
     
     private lazy var contentLabel: UILabel = {
         let contentLabel = UILabel()
-        contentLabel.text = post.text != "" ? post.text : "Здесь будет содержимое поста"
+        contentLabel.text = post.description != "" ? post.description : "Здесь будет содержимое поста"
         contentLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         contentLabel.numberOfLines = 0
         return contentLabel
