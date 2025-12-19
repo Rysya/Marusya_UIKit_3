@@ -18,6 +18,7 @@ class ProfileViewController: UIViewController {
         tableView.backgroundColor = .white
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.allowsSelection = false
         tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
         tableView.tableHeaderView = profileHeaderView
         return tableView
@@ -46,7 +47,7 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         title = "Профиль пользователя"
         self.view.backgroundColor = .backgroundProfileGray
-        view.addSubviews([tableView/*, profileView, newButton*/])
+        view.addSubviews([tableView])
         setupConstraints()
     }
     

@@ -14,13 +14,12 @@ class PostTableViewCell: UITableViewCell {
     
     private lazy var postImageView: UIImageView = {
         let postImageView = UIImageView()
-        postImageView.contentMode = .scaleAspectFill
+        postImageView.contentMode = .scaleAspectFit
         postImageView.backgroundColor = .black
-        postImageView.clipsToBounds = true
         return postImageView
     }()
     
-    private var content: UILabel = {
+    private var descriptionLabel: UILabel = {
         let text = UILabel()
         text.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         text.textColor = .systemGray
@@ -40,7 +39,7 @@ class PostTableViewCell: UITableViewCell {
     private var countViews: UILabel = {
         let text = UILabel()
         text.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        text.textColor = .systemGray
+        text.textColor = .black
         text.numberOfLines = 0
         text.textAlignment = .right
         return text
@@ -63,7 +62,7 @@ class PostTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         feedStackView.addArrangedSubview(countLikes)
         feedStackView.addArrangedSubview(countViews)
-        addSubviews([author, postImageView, content, feedStackView])
+        addSubviews([author, postImageView, descriptionLabel, feedStackView])
         setupConstraints()
     }
     
@@ -71,37 +70,34 @@ class PostTableViewCell: UITableViewCell {
         author.text = post.author
         if let imageName = post.imageName, let image = UIImage(named: imageName) {
             postImageView.image = image
-            postImageView.heightAnchor.constraint(equalToConstant: 400).isActive = true
+            postImageView.heightAnchor.constraint(equalToConstant: bounds.width).isActive = true
         } else {
             postImageView.tintColor = .gray
             postImageView.image = UIImage(systemName: "photo")
-            postImageView.heightAnchor.constraint(equalToConstant: 400).isActive = true
+            postImageView.heightAnchor.constraint(equalToConstant: bounds.width).isActive = true
         }
-        content.text = post.description
+        descriptionLabel.text = post.description
         countViews.text = "Views: \(post.views)"
         countLikes.text = "Likes: \(post.likes)"
     }
     
     private func setupConstraints() {
-        
         NSLayoutConstraint.activate([
             
             author.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             author.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             
             postImageView.topAnchor.constraint(equalTo: author.bottomAnchor, constant: 12),
-            postImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            postImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            postImageView.bottomAnchor.constraint(equalTo: content.topAnchor, constant: -16),
-            postImageView.heightAnchor.constraint(equalToConstant: 400),
+            postImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            postImageView.widthAnchor.constraint(equalTo: widthAnchor),
+            postImageView.heightAnchor.constraint(equalTo: widthAnchor),
             
-            content.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 16),
-            content.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            content.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 16),
-            content.bottomAnchor.constraint(equalTo: feedStackView.topAnchor, constant: -16),
+            descriptionLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 16),
+            descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            descriptionLabel.bottomAnchor.constraint(equalTo: feedStackView.topAnchor, constant: -16),
             
-            
-            feedStackView.topAnchor.constraint(equalTo: content.bottomAnchor, constant: 16),
+            feedStackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
             feedStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             feedStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             feedStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)

@@ -44,5 +44,4 @@ class DataStore {
                  views: 800),
         ]
     }
-
 }
