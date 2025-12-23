@@ -53,11 +53,11 @@ class PostTableViewCell: UITableViewCell {
         text.textAlignment = .left
         return text
     }()
-
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         feedStackView.addArrangedSubview(countLikes)
@@ -103,5 +103,4 @@ class PostTableViewCell: UITableViewCell {
             feedStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
         ])
     }
-    
 }

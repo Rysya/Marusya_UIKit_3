@@ -31,13 +31,13 @@ class PhotosTableViewCell: UITableViewCell {
         imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
         return imageView
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         addSubviews([feedStackView])
         setupConstraints()
     }
-
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             feedStackView.topAnchor.constraint(equalTo: topAnchor, constant: 12),
@@ -45,6 +45,5 @@ class PhotosTableViewCell: UITableViewCell {
             feedStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             feedStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12)
         ])
-
     }
 }

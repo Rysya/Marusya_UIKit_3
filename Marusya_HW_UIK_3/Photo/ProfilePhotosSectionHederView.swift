@@ -33,7 +33,7 @@ class ProfilePhotosSectionHederView: UIView {
     }
     
     @objc private func goToPhotosButtonTapped() {
-       openCollectionPhotoHandler?()
+        openCollectionPhotoHandler?()
     }
     
     func setup(handler: @escaping () -> Void) {
@@ -46,7 +46,7 @@ class ProfilePhotosSectionHederView: UIView {
     }
     
     private func setupConstraints() {
-       
+        
         NSLayoutConstraint.activate([
             
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 12),

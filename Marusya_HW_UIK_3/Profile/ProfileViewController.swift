@@ -2,6 +2,8 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
+    private let dataStore = DataStore()
+    
     private var profileHeaderView: ProfileHeaderView = {
         let view = ProfileHeaderView(frame: CGRect(x: 0, y: 0, width: 0, height: 250))
         view.backgroundColor = .F_2_F_2_F_7
@@ -14,7 +16,7 @@ class ProfileViewController: UIViewController {
     }()
     
     private lazy var tableView: UITableView = {
-       let tableView = UITableView()
+        let tableView = UITableView()
         tableView.backgroundColor = .white
         tableView.dataSource = self
         tableView.delegate = self
@@ -43,8 +45,6 @@ class ProfileViewController: UIViewController {
         return profileView
     }()
     
-    let dataStore = DataStore()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Профиль пользователя"
@@ -65,11 +65,6 @@ class ProfileViewController: UIViewController {
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     
-//    private enum TableSection: Int, CaseIterable {
-//        case photos
-//        case posts
-//    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
             case 0:
@@ -82,7 +77,6 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-//        return TableSection.allCases.count
         return 2
     }
     
@@ -104,7 +98,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             case 0: let profilePhotosSectionHederView = ProfilePhotosSectionHederView()
                 profilePhotosSectionHederView.setup { [weak self] in
                     let photoVC = PhotosViewController()
-                        
+                    
                     self?.navigationController?.pushViewController(photoVC, animated: true)
                 }
                 return profilePhotosSectionHederView
@@ -118,5 +112,4 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             default: return 0
         }
     }
-
 }
