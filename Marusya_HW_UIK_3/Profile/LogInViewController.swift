@@ -72,9 +72,7 @@ class LogInViewController: UIViewController {
         button.layer.cornerRadius = 10
         button.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner]
         button.layer.masksToBounds = true
-        button.addTarget(self,
-                         action: #selector(toProfilView),
-                         for: .touchUpInside)
+        button.addTarget(self, action: #selector(toProfilView), for: .touchUpInside)
         return button
     }()
     

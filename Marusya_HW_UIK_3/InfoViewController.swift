@@ -35,15 +35,15 @@ class InfoViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-            let closeButton = UIBarButtonItem(
-                image: UIImage(systemName: "xmark"),
-                style: .plain,
-                target: self,
-                action: #selector(closeButtonTapped)
-            )
-            navigationItem.rightBarButtonItem = closeButton
-            closeButton.tintColor = .label
-        }
+        let closeButton = UIBarButtonItem(
+            image: UIImage(systemName: "xmark"),
+            style: .plain,
+            target: self,
+            action: #selector(closeButtonTapped)
+        )
+        navigationItem.rightBarButtonItem = closeButton
+        closeButton.tintColor = .label
+    }
     
     private func setupSubviews() {
             view.addSubview(infoLabel)
