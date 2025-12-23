@@ -2,7 +2,7 @@ import UIKit
 
 class PostTableViewCell: UITableViewCell {
     
-    static let id = "PostCell"
+    static let id = "PostTableViewCell"
     
     private var author: UILabel = {
         let titleLabel = UILabel()

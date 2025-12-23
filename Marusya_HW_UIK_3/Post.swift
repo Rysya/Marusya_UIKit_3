@@ -11,7 +11,7 @@ struct Post {
 
 class DataStore {
 
-    var models: [Post] = []
+    var models: [Post]
     
     init() {
         models = [
