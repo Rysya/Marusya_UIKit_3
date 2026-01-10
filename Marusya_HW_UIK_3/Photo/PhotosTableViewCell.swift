@@ -17,18 +17,18 @@ class PhotosTableViewCell: UITableViewCell {
         stackView.spacing = 8
         stackView.distribution = .fillEqually
         stackView.alignment = .fill
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
     private func createImageView(with imageName: String) -> UIImageView {
         let imageView = UIImageView(image: UIImage(named: imageName))
         imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 6
-        imageView.layer.masksToBounds = true
+        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
+        let aspectRatio = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor)
+        aspectRatio.priority = .defaultHigh
+        aspectRatio.isActive = true
         return imageView
     }
     

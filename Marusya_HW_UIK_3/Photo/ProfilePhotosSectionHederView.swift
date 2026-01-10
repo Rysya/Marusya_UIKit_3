@@ -46,9 +46,7 @@ class ProfilePhotosSectionHederView: UIView {
     }
     
     private func setupConstraints() {
-        
         NSLayoutConstraint.activate([
-            
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 12),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
