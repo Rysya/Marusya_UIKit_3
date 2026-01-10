@@ -70,11 +70,9 @@ class PostTableViewCell: UITableViewCell {
         author.text = post.author
         if let imageName = post.imageName, let image = UIImage(named: imageName) {
             postImageView.image = image
-            postImageView.heightAnchor.constraint(equalToConstant: bounds.width).isActive = true
         } else {
             postImageView.tintColor = .gray
             postImageView.image = UIImage(systemName: "photo")
-            postImageView.heightAnchor.constraint(equalToConstant: bounds.width).isActive = true
         }
         descriptionLabel.text = post.description
         countViews.text = "Views: \(post.views)"

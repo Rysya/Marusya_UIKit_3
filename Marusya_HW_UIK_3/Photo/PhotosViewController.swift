@@ -5,7 +5,6 @@ class PhotosViewController: UIViewController {
     private let photoArh = PhotosArh()
     
     private lazy var collectionView: UICollectionView = {
-        
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         

@@ -17,25 +17,25 @@ class PhotosTableViewCell: UITableViewCell {
         stackView.spacing = 8
         stackView.distribution = .fillEqually
         stackView.alignment = .fill
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    
-    private func createImageView(with imageName: String) -> UIImageView {
-        let imageView = UIImageView(image: UIImage(named: imageName))
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 6
-        imageView.layer.masksToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
-        return imageView
-    }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         addSubviews([feedStackView])
         setupConstraints()
+    }
+    
+    private func createImageView(with imageName: String) -> UIImageView {
+        let imageView = UIImageView(image: UIImage(named: imageName))
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 6
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        let aspectRatio = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor)
+        aspectRatio.priority = .defaultHigh
+        aspectRatio.isActive = true
+        return imageView
     }
     
     private func setupConstraints() {

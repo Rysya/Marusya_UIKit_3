@@ -64,7 +64,6 @@ class LogInViewController: UIViewController {
             button.setBackgroundImage(imageBg.image(alpha: 0.8), for: .selected)
             button.setBackgroundImage(imageBg.image(alpha: 0.8), for: .highlighted)
             button.setBackgroundImage(imageBg.image(alpha: 0.8), for: .disabled)
-            
         } else {
             button.backgroundColor = .vk
         }
@@ -151,7 +150,6 @@ class LogInViewController: UIViewController {
     
     @objc func handleTap(_ gesture: UITapGestureRecognizer) {
         let location = gesture.location(in: view)
-        
         let emailFieldFrame = emailTextField.convert(emailTextField.bounds, to: view)
         let passwordFieldFrame = passwordTextField.convert(passwordTextField.bounds, to: view)
         let loginBottomFrame = loginButton.convert(loginButton.bounds, to: view)
