@@ -20,6 +20,12 @@ class PhotosTableViewCell: UITableViewCell {
         return stackView
     }()
     
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        addSubviews([feedStackView])
+        setupConstraints()
+    }
+    
     private func createImageView(with imageName: String) -> UIImageView {
         let imageView = UIImageView(image: UIImage(named: imageName))
         imageView.contentMode = .scaleAspectFill
@@ -30,12 +36,6 @@ class PhotosTableViewCell: UITableViewCell {
         aspectRatio.priority = .defaultHigh
         aspectRatio.isActive = true
         return imageView
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        addSubviews([feedStackView])
-        setupConstraints()
     }
     
     private func setupConstraints() {
