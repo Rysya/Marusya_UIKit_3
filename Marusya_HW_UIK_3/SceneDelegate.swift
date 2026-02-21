@@ -6,13 +6,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     private func createFeedUserController() -> UINavigationController {
         let nvc = UINavigationController(rootViewController: FeedViewController())
-        nvc.tabBarItem = UITabBarItem(title: "Лента пользователя", image: UIImage(systemName: "house.fill"), tag: 1)
+        nvc.tabBarItem = UITabBarItem(title: "Лента пользователя",
+                                      image: UIImage(systemName: "house.fill"), tag: 1)
         return nvc
     }
     
     private func createProfileUserController() -> UINavigationController {
         let nvc = UINavigationController(rootViewController: LogInViewController())
-        nvc.tabBarItem = UITabBarItem(title: "Профиль пользователя", image: UIImage(systemName: "person.fill"), tag: 0)
+        nvc.tabBarItem = UITabBarItem(title: "Профиль пользователя",
+                                      image: UIImage(systemName: "person.fill"), tag: 0)
         return nvc
     }
     

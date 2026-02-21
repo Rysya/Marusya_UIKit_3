@@ -1,6 +1,6 @@
 import UIKit
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: UIViewController, PostTableViewCellDelegate {
     
     private let dataStore = DataStore()
     
@@ -21,7 +21,8 @@ class ProfileViewController: UIViewController {
         view.layer.shadowOpacity = 1
         view.layer.masksToBounds = false
         view.addSubviews([avatarImageView])
-        avatarImageTopConstraint = avatarImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16)
+        avatarImageTopConstraint = avatarImageView.topAnchor.constraint(equalTo: view.topAnchor,
+                                                                        constant: 16)
         avatarImageLeadingConstraint = avatarImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
         avatarImageWidthConstraint = avatarImageView.widthAnchor.constraint(equalToConstant: 120)
         avatarImageHeightConstraint = avatarImageView.heightAnchor.constraint(equalToConstant: 120)
@@ -56,9 +57,9 @@ class ProfileViewController: UIViewController {
         tableView.delegate = self
         tableView.allowsSelection = false
         tableView.sectionHeaderTopPadding = 0.2
+        tableView.tableHeaderView = profileHeaderView
         tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: PhotosTableViewCell.id)
         tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
-        tableView.tableHeaderView = profileHeaderView
         return tableView
     }()
     
@@ -97,7 +98,6 @@ class ProfileViewController: UIViewController {
     }()
     
     override func viewDidLoad() {
-        navigationController?.setNavigationBarHidden(true, animated: false)
         super.viewDidLoad()
         title = "Профиль пользователя"
         self.view.backgroundColor = .backgroundProfileGray
@@ -106,7 +106,18 @@ class ProfileViewController: UIViewController {
         setupConstraints()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tableView.reloadData()
+    }
+    
     // MARK: - Настройка жестов
+    
     private func setupGestureRecognizers(imageView: UIImageView) {
         imageView.isUserInteractionEnabled = true
         let tapGestureRecognizer = UITapGestureRecognizer()
@@ -115,8 +126,9 @@ class ProfileViewController: UIViewController {
         tapGestureRecognizer.numberOfTouchesRequired = 1
         imageView.addGestureRecognizer(tapGestureRecognizer)
     }
-    
+
     // MARK: - Обработка жеста Tap (нажатие)
+    
     @objc func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
         if let tappedView = gestureRecognizer.view {
             avatarImageView.removeFromSuperview()
@@ -233,7 +245,13 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
                 return cell
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.id, for: indexPath) as! PostTableViewCell
-                cell.setup(post: dataStore.models[indexPath.row])
+                cell.delegate = self
+                cell.setup(post: dataStore.models[indexPath.row]) { [weak self] in
+                    guard let self else { return 0 }
+                    self.dataStore.models[indexPath.row].likes += 1
+                    
+                    return self.dataStore.models[indexPath.row].likes
+                }
                 return cell
             default: return UITableViewCell()
         }
@@ -256,5 +274,34 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             case 0: return 36
             default: return 0
         }
+    }
+    
+    func didTapPostImage(in cell: PostTableViewCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        
+        let post = dataStore.models[indexPath.row]
+        let vc = PostViewController(post: post)
+        
+        vc.view.backgroundColor = .white
+        navigationController?.pushViewController(vc, animated: true)
+        dataStore.models[indexPath.row].views += 1
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+    -> UISwipeActionsConfiguration? {
+
+        let deleteAction = UIContextualAction(style: .destructive, title: "Удалить") {
+            (action, view, completionHandler) in
+            
+            self.dataStore.models.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            completionHandler(true)
+        }
+
+        deleteAction.image = UIImage(systemName: "trash")
+        deleteAction.backgroundColor = .systemRed
+
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 }

@@ -4,6 +4,14 @@ class PostViewController: UIViewController {
     
     private let post: Post
     
+    private lazy var authorLabel: UILabel = {
+        let titleLabel = UILabel()
+        titleLabel.text = post.author
+        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        titleLabel.numberOfLines = 0
+        return titleLabel
+    }()
+    
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = post.title
@@ -37,7 +45,8 @@ class PostViewController: UIViewController {
     }()
     
     private lazy var contentStackView: UIStackView = {
-        let contentStackView = UIStackView(arrangedSubviews: [postImageView, contentTextView])
+        let contentStackView = UIStackView(arrangedSubviews: [postImageView,
+                                                              contentTextView])
         contentStackView.axis = .vertical
         contentStackView.spacing = 16
         contentStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -45,11 +54,18 @@ class PostViewController: UIViewController {
     }()
    
     private lazy var contentTextView: UIStackView = {
-        let contentTextView = UIStackView(arrangedSubviews: [titleLabel, contentLabel])
+        let contentTextView = UIStackView(arrangedSubviews: [authorLabel,
+                                                             titleLabel,
+                                                             contentLabel])
         contentTextView.axis = .vertical
         contentTextView.spacing = 16
         contentTextView.translatesAutoresizingMaskIntoConstraints = false
         return contentTextView
+    }()
+    
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        return scrollView
     }()
     
     init(post: Post) {
@@ -69,21 +85,14 @@ class PostViewController: UIViewController {
         setupConstraints()
     }
     
-    private func setupSubviews() {
-        view.addSubview(postImageView)
-        view.addSubview(contentTextView)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            contentTextView.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
-            contentTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            contentTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            
-            postImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            postImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            postImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
+    private func setupSubviews() {
+        view.addSubviews([scrollView])
+        scrollView.addSubviews([contentStackView])
     }
     
     private func setupNavigationBar() {
@@ -101,5 +110,29 @@ class PostViewController: UIViewController {
         let navigationController = UINavigationController(rootViewController: infoViewController)
         
         present(navigationController, animated: true, completion: nil)
+    }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            contentStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            
+            contentStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100),
+            
+            contentTextView.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 16),
+            contentTextView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            contentTextView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            
+            postImageView.topAnchor.constraint(equalTo: contentStackView.topAnchor),
+            postImageView.leadingAnchor.constraint(equalTo: contentStackView.leadingAnchor),
+            postImageView.trailingAnchor.constraint(equalTo: contentStackView.trailingAnchor)
+        ])
     }
 }
