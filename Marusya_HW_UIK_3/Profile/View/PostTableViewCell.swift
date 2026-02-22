@@ -36,7 +36,7 @@ class PostTableViewCell: UITableViewCell {
         let text = UILabel()
         text.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         text.textColor = .systemGray
-        text.numberOfLines = 0
+        text.numberOfLines = 3
         return text
     }()
     
@@ -50,7 +50,7 @@ class PostTableViewCell: UITableViewCell {
         return stackView
     }()
     
-    private lazy var countViews: UILabel = {
+    private var countViews: UILabel = {
         let labelCount = UILabel()
         labelCount.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         labelCount.textColor = .black

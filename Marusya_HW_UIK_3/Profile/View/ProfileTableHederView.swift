@@ -7,7 +7,7 @@ class ProfileHeaderView: UIView {
     private var isFirstLayout = true
     private let statusService = StatusService()
 
-    private lazy var titleLabel: UILabel = {
+    private var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = "Hipster Cat"
         titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
@@ -16,7 +16,7 @@ class ProfileHeaderView: UIView {
         return titleLabel
     }()
     
-    private lazy var statusLabel: UILabel = {
+    private var statusLabel: UILabel = {
         let statusLabel = UILabel()
         statusLabel.text = "Waiting for something..."
         statusLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -27,7 +27,7 @@ class ProfileHeaderView: UIView {
     
     private var isStatusVisibleOfTextFieldStatus = false
     
-    private lazy var textFieldStatus: UITextField = {
+    private var textFieldStatus: UITextField = {
         let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
         let textFieldStatus = UITextField()
         textFieldStatus.isUserInteractionEnabled = true
@@ -71,48 +71,86 @@ class ProfileHeaderView: UIView {
         return showStatusButton
     }()
     
-    @objc private func setNewStatus() {
-        if isStatusVisibleOfTextFieldStatus {
-            do {
-                try statusService.isValidStatus(status: textFieldStatus.text ?? "")
-                isStatusVisibleOfTextFieldStatus = false
-                statusLabel.text = textFieldStatus.text
-                showStatusButton.setTitle("Ввести новый статус", for: .normal)
-                animateButton()
-                
-            } catch StatusError.emptyStatus {
-                textFieldStatus.isHidden = false
-                isStatusVisibleOfTextFieldStatus = true
-                showError(for: textFieldStatus, message: "Введите статус")
-            }  catch {
-                print(error.localizedDescription)
-            }
-        } else
-        {
-            if textFieldStatus.text?.isEmpty == true, isFirstClick {
-                textFieldStatus.text = ""
-                isFirstClick = false
-                textFieldStatus.isHidden = false
-                textFieldStatus.placeholder = "Напишите статус"
-            } else {
-                do {
-                    try statusService.isValidStatus(status: textFieldStatus.text ?? "")
-                    isStatusVisibleOfTextFieldStatus = true
-                    showStatusButton.setTitle("Установить новый статус", for: .normal)
-                    self.showStatusButtonTopConstraint.isActive = false
-                    textFieldStatus.placeholder = "Напишите статус"
-                    textFieldStatus.layer.borderColor = UIColor.black.cgColor
-                    animateButton()
-                    
-                } catch StatusError.emptyStatus {
-                    textFieldStatus.isHidden = false
-                    isStatusVisibleOfTextFieldStatus = true
-                    showError(for: textFieldStatus, message: "Введите статус")
-                }  catch {
-                    print(error.localizedDescription)
-                }
-            }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if isFirstLayout {
+            setupView()
+            isFirstLayout = false
         }
+    }
+    
+    @objc private func setNewStatus() {
+        if !isStatusVisibleOfTextFieldStatus,
+           textFieldStatus.text?.isEmpty == true,
+           isFirstClick {
+            textFieldStatus.text = ""
+            isFirstClick = false
+            textFieldStatus.isHidden = false
+            textFieldStatus.placeholder = "Напишите статус"
+            return
+        }
+        do {
+            try statusService.isValidStatus(status: textFieldStatus.text ?? "")
+            isStatusVisibleOfTextFieldStatus.toggle()
+            showStatusButton.setTitle(isStatusVisibleOfTextFieldStatus
+                                      ? "Ввести новый статус"
+                                      : "Установить новый статус",
+                                      for: .normal)
+            if isStatusVisibleOfTextFieldStatus {
+                statusLabel.text = textFieldStatus.text
+            } else {
+                showStatusButtonTopConstraint.isActive = false
+                textFieldStatus.placeholder = "Напишите статус"
+                textFieldStatus.layer.borderColor = UIColor.black.cgColor
+            }
+            animateButton()
+        } catch StatusError.emptyStatus {
+            textFieldStatus.isHidden = false
+            isStatusVisibleOfTextFieldStatus = true
+            showError(for: textFieldStatus, message: "Введите статус")
+        } catch {
+            print(error.localizedDescription)
+        }
+//        if isStatusVisibleOfTextFieldStatus {
+//            do {
+//                try statusService.isValidStatus(status: textFieldStatus.text ?? "")
+//                isStatusVisibleOfTextFieldStatus = false
+//                statusLabel.text = textFieldStatus.text
+//                showStatusButton.setTitle("Ввести новый статус", for: .normal)
+//                animateButton()
+//                
+//            } catch StatusError.emptyStatus {
+//                textFieldStatus.isHidden = false
+//                isStatusVisibleOfTextFieldStatus = true
+//                showError(for: textFieldStatus, message: "Введите статус")
+//            }  catch {
+//                print(error.localizedDescription)
+//            }
+//        } else {
+//            if textFieldStatus.text?.isEmpty == true, isFirstClick {
+//                textFieldStatus.text = ""
+//                isFirstClick = false
+//                textFieldStatus.isHidden = false
+//                textFieldStatus.placeholder = "Напишите статус"
+//            } else {
+//                do {
+//                    try statusService.isValidStatus(status: textFieldStatus.text ?? "")
+//                    isStatusVisibleOfTextFieldStatus = true
+//                    showStatusButton.setTitle("Установить новый статус", for: .normal)
+//                    self.showStatusButtonTopConstraint.isActive = false
+//                    textFieldStatus.placeholder = "Напишите статус"
+//                    textFieldStatus.layer.borderColor = UIColor.black.cgColor
+//                    animateButton()
+//                    
+//                } catch StatusError.emptyStatus {
+//                    textFieldStatus.isHidden = false
+//                    isStatusVisibleOfTextFieldStatus = true
+//                    showError(for: textFieldStatus, message: "Введите статус")
+//                }  catch {
+//                    print(error.localizedDescription)
+//                }
+//            }
+//        }
     }
     
     private func animateButton() {
@@ -165,24 +203,13 @@ class ProfileHeaderView: UIView {
         }
     }
     
-    private func showError(
-       for textField: UITextField,
-       message: String
-   ) {
+    private func showError(for textField: UITextField, message: String) {
        textField.shake()
        textField.layer.borderWidth = 1
        textField.layer.borderColor = UIColor.error.cgColor
        textField.layer.cornerRadius = 8
        textField.placeholder = message
    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if isFirstLayout {
-            setupView()
-            isFirstLayout = false
-        }
-    }
     
     private func setupView() {
         addSubviews([titleLabel, statusLabel, textFieldStatus, showStatusButton])

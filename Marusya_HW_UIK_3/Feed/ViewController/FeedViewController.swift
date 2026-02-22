@@ -2,7 +2,7 @@ import UIKit
 
 class FeedViewController: UIViewController {
     
-    private let samplePost = Post(
+    private var samplePost = Post(
             id: 100,
             author: "leon",
             title: "Пост от leon",
@@ -78,7 +78,11 @@ class FeedViewController: UIViewController {
     }
     
     @objc private func showPostButtonTapped() {
-        let postViewController = PostViewController(post: samplePost)
+        let postViewController = PostViewController(post: samplePost) { [weak self] in
+            guard let self else { return 0 }
+            samplePost.likes += 1
+            return samplePost.likes
+        }
             
         navigationController?.pushViewController(postViewController, animated: true)
     }

@@ -171,7 +171,6 @@ extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDele
                         didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? PhotosCollectionViewCell,
               let imageElement = cell.imageView.image,
-              let imageSize = imageElement.size as CGSize?,
               let window = view.window
         else { return }
         
@@ -215,28 +214,12 @@ extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDele
         zoomingImageView.addGestureRecognizer(swipeLeft)
         zoomingImageView.addGestureRecognizer(swipeRight)
         zoomingImageView.isUserInteractionEnabled = true
-        
-        // Вычисляем финальный frame
-        let screenWidth = window.frame.width
-        let screenHeight = window.frame.height
-
-        let widthRatio = screenWidth / imageSize.width
-        let heightRatio = screenHeight / imageSize.height
-
-        let scale = min(widthRatio, heightRatio)
-
-        let finalWidth = imageSize.width * scale
-        let finalHeight = imageSize.height * scale
-
-        let x = (screenWidth - finalWidth) / 2
-        let y = (screenHeight - finalHeight) / 2
-
-        let finalFrame = CGRect(x: x, y: y, width: finalWidth, height: finalHeight)
-        
+                
         UIView.animate(withDuration: 0.4,
                        delay: 0,
                        options: .curveEaseInOut) {
-            self.zoomingImageView.frame = finalFrame
+            self.zoomingImageView.frame = self.view.bounds
+            self.zoomingImageView.contentMode = .scaleAspectFit
             backgroundView.alpha = 0.8
             window.addSubview(self.closeButton)
         } completion: { _ in

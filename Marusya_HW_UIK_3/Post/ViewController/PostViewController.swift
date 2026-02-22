@@ -3,7 +3,8 @@ import UIKit
 class PostViewController: UIViewController {
     
     private let post: Post
-    
+    private var likeHandler: (() -> Int)?
+
     private lazy var authorLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = post.author
@@ -32,35 +33,84 @@ class PostViewController: UIViewController {
         let postImageView = UIImageView()
         if let imageName = post.imageName, let image = UIImage(named: imageName) {
             postImageView.image = image
-            postImageView.heightAnchor.constraint(equalToConstant: 400).isActive = true
+            postImageView.heightAnchor.constraint(
+                equalTo: postImageView.widthAnchor,
+                multiplier: image.size.height / image.size.width
+            ).isActive = true
         } else {
             postImageView.tintColor = .gray
             postImageView.image = UIImage(systemName: "photo")
             postImageView.heightAnchor.constraint(equalToConstant: 400).isActive = true
         }
-        postImageView.contentMode = .scaleAspectFill
+        postImageView.contentMode = .scaleAspectFit
         postImageView.clipsToBounds = true
-        postImageView.translatesAutoresizingMaskIntoConstraints = false
         return postImageView
     }()
     
     private lazy var contentStackView: UIStackView = {
         let contentStackView = UIStackView(arrangedSubviews: [postImageView,
-                                                              contentTextView])
+                                                              contentHorizontalView])
         contentStackView.axis = .vertical
         contentStackView.spacing = 16
-        contentStackView.translatesAutoresizingMaskIntoConstraints = false
         return contentStackView
     }()
-   
+    
+    private lazy var contentVerticalView: UIStackView = {
+       let viewStack = UIStackView(arrangedSubviews: [contentTextView,
+                                                 feedStackView])
+        viewStack.axis = .vertical
+        viewStack.spacing = 16
+        return viewStack
+    }()
+    
+    private lazy var contentHorizontalView: UIStackView = {
+        let viewStack = UIStackView(arrangedSubviews: [contentVerticalView])
+        viewStack.alignment = .fill
+        viewStack.distribution = .fill
+        viewStack.isLayoutMarginsRelativeArrangement = true
+        viewStack.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        viewStack.axis = .horizontal
+        return viewStack
+    }()
+    
     private lazy var contentTextView: UIStackView = {
         let contentTextView = UIStackView(arrangedSubviews: [authorLabel,
                                                              titleLabel,
                                                              contentLabel])
         contentTextView.axis = .vertical
         contentTextView.spacing = 16
-        contentTextView.translatesAutoresizingMaskIntoConstraints = false
         return contentTextView
+    }()
+    
+    private lazy var feedStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [countLikes,
+                                                       countViews])
+        stackView.axis = .horizontal
+        stackView.spacing = 0
+        stackView.distribution = .fill
+        return stackView
+    }()
+    
+    private var countViews: UILabel = {
+        let labelCount = UILabel()
+        labelCount.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        labelCount.textColor = .black
+        labelCount.numberOfLines = 0
+        labelCount.textAlignment = .right
+        return labelCount
+    }()
+    
+    private lazy var countLikes: UILabel = {
+        let labelCount = UILabel()
+        labelCount.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        labelCount.textColor = .black
+        labelCount.numberOfLines = 0
+        labelCount.textAlignment = .left
+        labelCount.text = "Likes: \(post.likes)"
+        labelCount.isUserInteractionEnabled = true
+        labelCount.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                               action: #selector(incrementLikeGesture)))
+        return labelCount
     }()
     
     private let scrollView: UIScrollView = {
@@ -68,9 +118,11 @@ class PostViewController: UIViewController {
         return scrollView
     }()
     
-    init(post: Post) {
+    init(post: Post, likeHandler: @escaping () -> Int) {
         self.post = post
+        self.likeHandler = likeHandler
         super.init(nibName: nil, bundle: nil)
+        countViews.text = "Views: \(post.views + 1)"
     }
     
     required init?(coder: NSCoder) {
@@ -105,6 +157,10 @@ class PostViewController: UIViewController {
         navigationItem.rightBarButtonItem = infoButton
     }
     
+    @objc private func incrementLikeGesture() {
+        countLikes.text = "Likes: \(likeHandler?() ?? 0)"
+    }
+    
     @objc private func infoButtonTapped() {
         let infoViewController = InfoViewController()
         let navigationController = UINavigationController(rootViewController: infoViewController)
@@ -124,15 +180,7 @@ class PostViewController: UIViewController {
             contentStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
             contentStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            contentStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100),
-            
-            contentTextView.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 16),
-            contentTextView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            contentTextView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            
-            postImageView.topAnchor.constraint(equalTo: contentStackView.topAnchor),
-            postImageView.leadingAnchor.constraint(equalTo: contentStackView.leadingAnchor),
-            postImageView.trailingAnchor.constraint(equalTo: contentStackView.trailingAnchor)
+            contentStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 100)
         ])
     }
 }

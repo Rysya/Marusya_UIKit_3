@@ -63,7 +63,7 @@ class ProfileViewController: UIViewController, PostTableViewCellDelegate {
         return tableView
     }()
     
-    private lazy var newButton: UIButton = {
+    private var newButton: UIButton = {
         let newButton = UIButton()
         newButton.setTitle("Новая нижняя кнопка", for: .normal)
         newButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -126,40 +126,39 @@ class ProfileViewController: UIViewController, PostTableViewCellDelegate {
         tapGestureRecognizer.numberOfTouchesRequired = 1
         imageView.addGestureRecognizer(tapGestureRecognizer)
     }
-
+    
     // MARK: - Обработка жеста Tap (нажатие)
     
     @objc func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
-        if let tappedView = gestureRecognizer.view {
-            avatarImageView.removeFromSuperview()
-            view.addSubviews([tappedView])
-            self.view.bringSubviewToFront(tappedView)
-            avatarImageTopConstraint.isActive = true
-            avatarImageLeadingConstraint.isActive = true
+        guard let tappedView = gestureRecognizer.view else { return }
+        avatarImageView.removeFromSuperview()
+        view.addSubviews([tappedView])
+        self.view.bringSubviewToFront(tappedView)
+        avatarImageTopConstraint.isActive = true
+        avatarImageLeadingConstraint.isActive = true
+        self.view.layoutIfNeeded()
+        avatarImageTopConstraint.isActive = false
+        avatarImageLeadingConstraint.isActive = false
+        avatarImageWidthConstraint.isActive = false
+        avatarImageHeightConstraint.isActive = false
+        avatarImageCenterXConstraint = tappedView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
+        avatarImageCenterYConstraint = tappedView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
+        avatarImageWidthConstraint = tappedView.widthAnchor.constraint(equalTo: view.widthAnchor)
+        avatarImageHeightConstraint = tappedView.heightAnchor.constraint(equalTo: view.widthAnchor)
+        avatarImageCenterXConstraint.isActive = true
+        avatarImageCenterYConstraint.isActive = true
+        avatarImageWidthConstraint.isActive = true
+        avatarImageHeightConstraint.isActive = true
+        self.backgroundImageView.isHidden = false
+        UIView.animate(withDuration: 0.5) {
+            self.view.setNeedsLayout()
             self.view.layoutIfNeeded()
-            avatarImageTopConstraint.isActive = false
-            avatarImageLeadingConstraint.isActive = false
-            avatarImageWidthConstraint.isActive = false
-            avatarImageHeightConstraint.isActive = false
-            avatarImageCenterXConstraint = tappedView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
-            avatarImageCenterYConstraint = tappedView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
-            avatarImageWidthConstraint = tappedView.widthAnchor.constraint(equalTo: view.widthAnchor)
-            avatarImageHeightConstraint = tappedView.heightAnchor.constraint(equalTo: view.widthAnchor)
-            avatarImageCenterXConstraint.isActive = true
-            avatarImageCenterYConstraint.isActive = true
-            avatarImageWidthConstraint.isActive = true
-            avatarImageHeightConstraint.isActive = true
-            self.backgroundImageView.isHidden = false
-            UIView.animate(withDuration: 0.5) {
-                self.view.setNeedsLayout()
-                self.view.layoutIfNeeded()
-                tappedView.layer.cornerRadius = 0
-                self.backgroundImageView.layer.opacity = 0.8
-            } completion: { _ in
-                UIView.animate(withDuration: 0.3) {
-                    self.bigAvatarImageCloseButton.layer.opacity = 1
-                    self.bigAvatarImageCloseButton.isHidden = false
-                }
+            tappedView.layer.cornerRadius = 0
+            self.backgroundImageView.layer.opacity = 0.8
+        } completion: { _ in
+            UIView.animate(withDuration: 0.3) {
+                self.bigAvatarImageCloseButton.layer.opacity = 1
+                self.bigAvatarImageCloseButton.isHidden = false
             }
         }
     }
@@ -169,7 +168,7 @@ class ProfileViewController: UIViewController, PostTableViewCellDelegate {
             self.bigAvatarImageCloseButton.layer.opacity = 0
         } completion: { _ in
             self.bigAvatarImageCloseButton.isHidden = true
-
+            
             self.avatarImageCenterXConstraint.isActive = true
             self.avatarImageCenterYConstraint.isActive = true
             self.view.layoutIfNeeded()
@@ -249,7 +248,6 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.setup(post: dataStore.models[indexPath.row]) { [weak self] in
                     guard let self else { return 0 }
                     self.dataStore.models[indexPath.row].likes += 1
-                    
                     return self.dataStore.models[indexPath.row].likes
                 }
                 return cell
@@ -276,21 +274,10 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    func didTapPostImage(in cell: PostTableViewCell) {
-        guard let indexPath = tableView.indexPath(for: cell) else { return }
-        
-        let post = dataStore.models[indexPath.row]
-        let vc = PostViewController(post: post)
-        
-        vc.view.backgroundColor = .white
-        navigationController?.pushViewController(vc, animated: true)
-        dataStore.models[indexPath.row].views += 1
-    }
-    
     func tableView(_ tableView: UITableView,
                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
     -> UISwipeActionsConfiguration? {
-
+        
         let deleteAction = UIContextualAction(style: .destructive, title: "Удалить") {
             (action, view, completionHandler) in
             
@@ -298,10 +285,25 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             tableView.deleteRows(at: [indexPath], with: .automatic)
             completionHandler(true)
         }
-
+        
         deleteAction.image = UIImage(systemName: "trash")
         deleteAction.backgroundColor = .systemRed
-
+        
         return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+    
+    func didTapPostImage(in cell: PostTableViewCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        
+        let post = dataStore.models[indexPath.row]
+        let vc = PostViewController(post: post) { [weak self] in
+            guard let self else { return 0 }
+            self.dataStore.models[indexPath.row].likes += 1
+            return self.dataStore.models[indexPath.row].likes
+        }
+        
+        vc.view.backgroundColor = .white
+        navigationController?.pushViewController(vc, animated: true)
+        dataStore.models[indexPath.row].views += 1
     }
 }
