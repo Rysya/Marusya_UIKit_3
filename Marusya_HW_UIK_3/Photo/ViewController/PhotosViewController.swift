@@ -55,13 +55,6 @@ class PhotosViewController: UIViewController {
         view.addSubviews([collectionView])
     }
     
-    func didTapCollectionPhoto(in cell: PhotosCollectionViewCell) {
-        let tapGestureRecognizer = UITapGestureRecognizer()
-        tapGestureRecognizer.numberOfTapsRequired = 1
-        tapGestureRecognizer.numberOfTouchesRequired = 1
-        cell.addGestureRecognizer(tapGestureRecognizer)
-    }
-    
     @objc private func closeFullscreen() {
         dismissFullscreen()
     }
@@ -74,19 +67,19 @@ class PhotosViewController: UIViewController {
         }
     }
     
-    func showNextImage() {
+    private func showNextImage() {
         guard currentIndex < images.count - 1 else { return }
         currentIndex += 1
         animateImageChange()
     }
 
-    func showPreviousImage() {
+    private func showPreviousImage() {
         guard currentIndex > 0 else { return }
         currentIndex -= 1
         animateImageChange()
     }
 
-    func animateImageChange() {
+    private func animateImageChange() {
         zoomingImageView.image = images[currentIndex]
     }
     

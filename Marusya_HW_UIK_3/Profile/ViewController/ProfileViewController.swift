@@ -129,7 +129,7 @@ class ProfileViewController: UIViewController, PostTableViewCellDelegate {
     
     // MARK: - Обработка жеста Tap (нажатие)
     
-    @objc func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
+    @objc private func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
         guard let tappedView = gestureRecognizer.view else { return }
         avatarImageView.removeFromSuperview()
         view.addSubviews([tappedView])
@@ -163,7 +163,7 @@ class ProfileViewController: UIViewController, PostTableViewCellDelegate {
         }
     }
     
-    @objc func handleCloseBigAvatarImage() {
+    @objc private func handleCloseBigAvatarImage() {
         UIView.animate(withDuration: 0.3) {
             self.bigAvatarImageCloseButton.layer.opacity = 0
         } completion: { _ in
@@ -222,6 +222,7 @@ class ProfileViewController: UIViewController, PostTableViewCellDelegate {
 }
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
             case 0:

@@ -137,7 +137,7 @@ class LogInViewController: UIViewController {
     
     //MARK: Клавиатура
     
-    func subscribeKeyboardEvents() {
+    private func subscribeKeyboardEvents() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
                                                name: UIResponder.keyboardWillShowNotification,
                                                object: nil)
@@ -146,7 +146,7 @@ class LogInViewController: UIViewController {
                                                object: nil)
     }
     
-    @objc func keyboardWillShow(_ notification: NSNotification) {
+    @objc private func keyboardWillShow(_ notification: NSNotification) {
         guard isKeyboardVisible == false,
               let ks = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
         else { return }
@@ -161,7 +161,7 @@ class LogInViewController: UIViewController {
         scrollView.setContentOffset(CGPoint(x: 0, y: maxOffset), animated: true)
     }
     
-    @objc func keyboardWillHide(_ notification: NSNotification) {
+    @objc private func keyboardWillHide(_ notification: NSNotification) {
         scrollView.contentInset = .zero
         isKeyboardVisible = false
     }
@@ -172,7 +172,7 @@ class LogInViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
     }
     
-    @objc func handleTap(_ gesture: UITapGestureRecognizer) {
+    @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
         let location = gesture.location(in: view)
         let emailFieldFrame = emailTextField.convert(emailTextField.bounds, to: view)
         let passwordFieldFrame = passwordTextField.convert(passwordTextField.bounds, to: view)
