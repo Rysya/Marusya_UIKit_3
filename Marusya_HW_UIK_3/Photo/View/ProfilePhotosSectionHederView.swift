@@ -2,7 +2,6 @@ import UIKit
 
 class ProfilePhotosSectionHederView: UIView {
     
-    private var isKeyboardVisible = false
     private var openCollectionPhotoHandler: (() -> Void)?
     
     private let titleLabel: UILabel = {

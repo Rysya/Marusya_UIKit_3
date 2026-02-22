@@ -2,12 +2,11 @@ import UIKit
 
 class ProfileHeaderView: UIView {
     
-    private var isKeyboardVisible = false
     private var isFirstClick = true
     private var isFirstLayout = true
     private let statusService = StatusService()
     
-    private var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = "Hipster Cat"
         titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
@@ -16,7 +15,7 @@ class ProfileHeaderView: UIView {
         return titleLabel
     }()
     
-    private var statusLabel: UILabel = {
+    private let statusLabel: UILabel = {
         let statusLabel = UILabel()
         statusLabel.text = "Waiting for something..."
         statusLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -27,7 +26,7 @@ class ProfileHeaderView: UIView {
     
     private var isStatusVisibleOfTextFieldStatus = false
     
-    private var textFieldStatus: UITextField = {
+    private let textFieldStatus: UITextField = {
         let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
         let textFieldStatus = UITextField()
         textFieldStatus.isUserInteractionEnabled = true
@@ -79,6 +78,11 @@ class ProfileHeaderView: UIView {
         }
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        endEditing(true)
+    }
+    
     @objc private func setNewStatus() {
         let statusHandler: () -> Void = { [self] in
             showStatusButton.setTitle(isStatusVisibleOfTextFieldStatus
@@ -107,6 +111,7 @@ class ProfileHeaderView: UIView {
                 showStatusButtonTopConstraint.isActive = false
                 textFieldStatus.layer.borderColor = UIColor.black.cgColor
             }
+            endEditing(true)
             statusHandler()
             animateButton()
         } catch StatusError.emptyStatus {

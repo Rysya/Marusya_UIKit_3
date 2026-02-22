@@ -11,7 +11,7 @@ class PostTableViewCell: UITableViewCell {
     private var likeHandler: (() -> Int)?
     weak var delegate: PostTableViewCellDelegate?
     
-    private var author: UILabel = {
+    private let author: UILabel = {
         let titleLabel = UILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         titleLabel.textColor = .black
@@ -32,7 +32,7 @@ class PostTableViewCell: UITableViewCell {
         return postImageView
     }()
     
-    private var descriptionLabel: UILabel = {
+    private let descriptionLabel: UILabel = {
         let text = UILabel()
         text.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         text.textColor = .systemGray
@@ -50,7 +50,7 @@ class PostTableViewCell: UITableViewCell {
         return stackView
     }()
     
-    private var countViews: UILabel = {
+    private let countViews: UILabel = {
         let labelCount = UILabel()
         labelCount.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         labelCount.textColor = .black

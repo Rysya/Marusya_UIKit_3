@@ -59,7 +59,7 @@ class LogInViewController: UIViewController {
         return textField
     }()
     
-    private var errorLabel: UILabel = {
+    private let errorLabel: UILabel = {
         let label = UILabel()
         label.textColor = .error
         label.text = "Некорректный пароль"
@@ -132,7 +132,6 @@ class LogInViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         NotificationCenter.default.removeObserver(self)
-        
     }
     
     //MARK: Клавиатура

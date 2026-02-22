@@ -3,7 +3,7 @@ import UIKit
 class PhotosTableViewCell: UITableViewCell {
     
     static let id = "PhotosTableViewCell"
-    private var photoArh = PhotosArh()
+    private let photoArh = PhotosArh()
     
     private lazy var feedStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [

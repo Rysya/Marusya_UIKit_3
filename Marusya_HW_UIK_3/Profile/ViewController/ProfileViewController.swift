@@ -63,7 +63,7 @@ class ProfileViewController: UIViewController, PostTableViewCellDelegate {
         return tableView
     }()
     
-    private var newButton: UIButton = {
+    private let newButton: UIButton = {
         let newButton = UIButton()
         newButton.setTitle("Новая нижняя кнопка", for: .normal)
         newButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -74,13 +74,13 @@ class ProfileViewController: UIViewController, PostTableViewCellDelegate {
         return newButton
     }()
     
-    private var profileView: ProfileHeaderView = {
+    private let profileView: ProfileHeaderView = {
         let profileView = ProfileHeaderView()
         profileView.backgroundColor = .darkGray
         return profileView
     }()
     
-    private var backgroundImageView: UIView = {
+    private let backgroundImageView: UIView = {
         let backgroundImageView = UIView()
         backgroundImageView.backgroundColor = .black
         backgroundImageView.layer.opacity = 0

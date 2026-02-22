@@ -91,7 +91,7 @@ class PostViewController: UIViewController {
         return stackView
     }()
     
-    private var countViews: UILabel = {
+    private let countViews: UILabel = {
         let labelCount = UILabel()
         labelCount.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         labelCount.textColor = .black
@@ -113,10 +113,7 @@ class PostViewController: UIViewController {
         return labelCount
     }()
     
-    private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        return scrollView
-    }()
+    private let scrollView = UIScrollView()
     
     init(post: Post, likeHandler: @escaping () -> Int) {
         self.post = post
