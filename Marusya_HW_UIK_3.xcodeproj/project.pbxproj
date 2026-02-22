@@ -14,7 +14,7 @@
 		59CFEAD62EC5D82800EFD7B5 /* Exceptions for "Marusya_HW_UIK_3" folder in "Marusya_HW_UIK_3" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Info.plist,
 			);
 			target = 59CFEAC32EC5D82700EFD7B5 /* Marusya_HW_UIK_3 */;
 		};
@@ -147,7 +147,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HU72KBR3S6;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Marusya_HW_UIK_3/Info.plist;
+				INFOPLIST_FILE = Marusya_HW_UIK_3/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -182,7 +182,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HU72KBR3S6;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Marusya_HW_UIK_3/Info.plist;
+				INFOPLIST_FILE = Marusya_HW_UIK_3/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
