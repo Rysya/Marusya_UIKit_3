@@ -107,14 +107,14 @@ class PhotosViewController: UIViewController {
                        delay: 0,
                        usingSpringWithDamping: 0.9,
                        initialSpringVelocity: 0.8,
-                       options: .curveEaseInOut) {
+                       options: .curveLinear) {
             zoomOutImageView.frame = finalFrame
             backgroundView.alpha = 0
-            
+            zoomOutImageView.alpha = 0
         } completion: { _ in
-            zoomOutImageView.removeFromSuperview()
             backgroundView.removeFromSuperview()
             self.closeButton.removeFromSuperview()
+            zoomOutImageView.removeFromSuperview()
         }
     }
     

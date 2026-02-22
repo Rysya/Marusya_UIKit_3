@@ -57,7 +57,7 @@ class FeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Лента пользователя"
-        self.view.backgroundColor = .systemBlue
+        self.view.backgroundColor = .vk
         
         setupSubviews()
         setupConstraint()

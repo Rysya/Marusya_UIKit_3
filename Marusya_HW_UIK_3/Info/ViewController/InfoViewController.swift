@@ -16,7 +16,7 @@ class InfoViewController: UIViewController {
         let showAlertButton = UIButton(type: .system)
         showAlertButton.setTitle("Показать Alert", for: .normal)
         showAlertButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        showAlertButton.backgroundColor = .systemBlue
+        showAlertButton.backgroundColor = .vk
         showAlertButton.setTitleColor(.white, for: .normal)
         showAlertButton.layer.cornerRadius = 10
         showAlertButton.addTarget(self, action: #selector(showAlertButtonTapped), for: .touchUpInside)
