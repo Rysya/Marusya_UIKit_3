@@ -4,7 +4,7 @@ class PhotosCollectionViewCell: UICollectionViewCell {
     
     static let reuseIdentifier = "PhotosCollectionViewCell"
     
-    lazy var imageView: UIImageView = {
+    let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true

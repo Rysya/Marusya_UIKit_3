@@ -5,7 +5,7 @@ class ProfilePhotosSectionHederView: UIView {
     private var isKeyboardVisible = false
     private var openCollectionPhotoHandler: (() -> Void)?
     
-    private lazy var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = "Photos"
         titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
