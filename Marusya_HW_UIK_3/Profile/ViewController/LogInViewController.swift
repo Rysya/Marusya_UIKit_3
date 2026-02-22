@@ -1,6 +1,6 @@
 import UIKit
 
-class LogInViewController: UIViewController {
+final class LogInViewController: UIViewController {
     
     private var isKeyboardVisible = false
     private var isStatusVisibleOfErrorLabel = false

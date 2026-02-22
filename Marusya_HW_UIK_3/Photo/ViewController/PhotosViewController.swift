@@ -1,6 +1,6 @@
 import UIKit
 
-class PhotosViewController: UIViewController {
+final class PhotosViewController: UIViewController {
     
     private let photoArh = PhotosArh()
     
@@ -166,9 +166,8 @@ extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDele
               let imageElement = cell.imageView.image,
               let window = view.window
         else { return }
-        
         selectedImageView = cell.imageView
-        
+        currentIndex = indexPath.item
         // Получаем frame в координатах окна
         let startingFrame = cell.imageView.convert(cell.imageView.bounds, to: nil)
         

@@ -1,6 +1,6 @@
 import UIKit
 
-class PhotosTableViewCell: UITableViewCell {
+final class PhotosTableViewCell: UITableViewCell {
     
     static let id = "PhotosTableViewCell"
     private let photoArh = PhotosArh()

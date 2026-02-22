@@ -1,6 +1,6 @@
 import UIKit
 
-class FeedViewController: UIViewController {
+final class FeedViewController: UIViewController {
     
     private var samplePost = Post(
             id: 100,

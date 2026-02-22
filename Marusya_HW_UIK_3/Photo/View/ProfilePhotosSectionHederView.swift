@@ -1,6 +1,6 @@
 import UIKit
 
-class ProfilePhotosSectionHederView: UIView {
+final class ProfilePhotosSectionHederView: UIView {
     
     private var openCollectionPhotoHandler: (() -> Void)?
     

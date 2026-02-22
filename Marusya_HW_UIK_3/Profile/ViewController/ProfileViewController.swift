@@ -1,6 +1,6 @@
 import UIKit
 
-class ProfileViewController: UIViewController, PostTableViewCellDelegate {
+final class ProfileViewController: UIViewController, PostTableViewCellDelegate {
     
     private let dataStore = DataStore()
     

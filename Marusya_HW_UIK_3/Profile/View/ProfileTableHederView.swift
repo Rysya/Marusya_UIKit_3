@@ -1,6 +1,6 @@
 import UIKit
 
-class ProfileHeaderView: UIView {
+final class ProfileHeaderView: UIView {
     
     private var isFirstClick = true
     private var isFirstLayout = true

@@ -10,7 +10,7 @@ struct Post {
     var views: Int
 }
 
-class DataStore {
+final class DataStore {
 
     var models: [Post]
     

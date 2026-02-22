@@ -4,7 +4,7 @@ protocol PostTableViewCellDelegate: AnyObject {
     func didTapPostImage(in cell: PostTableViewCell)
 }
 
-class PostTableViewCell: UITableViewCell {
+final class PostTableViewCell: UITableViewCell {
     
     static let id = "PostTableViewCell"
     

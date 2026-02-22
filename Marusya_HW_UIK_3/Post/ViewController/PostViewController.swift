@@ -1,6 +1,6 @@
 import UIKit
 
-class PostViewController: UIViewController {
+final class PostViewController: UIViewController {
     
     private let post: Post
     private var likeHandler: (() -> Int)?
