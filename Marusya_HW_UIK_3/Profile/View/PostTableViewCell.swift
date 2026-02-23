@@ -69,10 +69,6 @@ final class PostTableViewCell: UITableViewCell {
         return labelCount
     }()
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         addSubviews([author, postImageView, descriptionLabel, feedStackView])
@@ -98,10 +94,6 @@ final class PostTableViewCell: UITableViewCell {
         let tapGestureRecognizer = UITapGestureRecognizer()
         tapGestureRecognizer.addTarget(self, action: #selector(incrementLikeGesture))
         labelView.addGestureRecognizer(tapGestureRecognizer)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
     }
     
     @objc private func incrementLikeGesture() {

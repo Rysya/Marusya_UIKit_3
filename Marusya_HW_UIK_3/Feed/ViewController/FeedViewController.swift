@@ -3,20 +3,19 @@ import UIKit
 final class FeedViewController: UIViewController {
     
     private var samplePost = Post(
-            id: 100,
-            author: "leon",
-            title: "Пост от leon",
-            description: "Это содержимое первого поста от leon в этом приложении. Здесь может быть длинный текст с интересной информацией, о том как leon счастливо живет или что-то в этом роде.",
-            imageName: "leon",
-            likes: 120,
-            views: 5400
-        )
+        id: 100,
+        author: "leon",
+        title: "Пост от leon",
+        description: "Это содержимое первого поста от leon в этом приложении. Здесь может быть длинный текст с интересной информацией, о том как leon счастливо живет или что-то в этом роде.",
+        imageName: "leon",
+        likes: 120,
+        views: 5400
+    )
     
     private let feedStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 10
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
@@ -83,7 +82,7 @@ final class FeedViewController: UIViewController {
             samplePost.likes += 1
             return samplePost.likes
         }
-            
+        
         navigationController?.pushViewController(postViewController, animated: true)
     }
 }
