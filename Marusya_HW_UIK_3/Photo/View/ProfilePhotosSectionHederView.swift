@@ -1,12 +1,10 @@
 import UIKit
 
-class ProfilePhotosSectionHederView: UIView {
-    
-    private var isKeyboardVisible = false
+final class ProfilePhotosSectionHederView: UIView {
     
     private var openCollectionPhotoHandler: (() -> Void)?
     
-    private lazy var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = "Photos"
         titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
@@ -15,7 +13,7 @@ class ProfilePhotosSectionHederView: UIView {
         return titleLabel
     }()
     
-    private var buttonPhotos: UIButton = {
+    private lazy var buttonPhotos: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "arrow.forward"), for: .normal)
         button.tintColor = .label

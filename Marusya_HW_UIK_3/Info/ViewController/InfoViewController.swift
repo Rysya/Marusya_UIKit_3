@@ -1,14 +1,13 @@
 import UIKit
 
-class InfoViewController: UIViewController {
+final class InfoViewController: UIViewController {
     
-    private lazy var infoLabel: UILabel = {
+    private let infoLabel: UILabel = {
         let infoLabel = UILabel()
         infoLabel.text = "Это информационный экран"
         infoLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         infoLabel.textAlignment = .center
         infoLabel.numberOfLines = 0
-        infoLabel.translatesAutoresizingMaskIntoConstraints = false
         return infoLabel
     }()
     
@@ -16,14 +15,13 @@ class InfoViewController: UIViewController {
         let showAlertButton = UIButton(type: .system)
         showAlertButton.setTitle("Показать Alert", for: .normal)
         showAlertButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        showAlertButton.backgroundColor = .systemBlue
+        showAlertButton.backgroundColor = .vk
         showAlertButton.setTitleColor(.white, for: .normal)
         showAlertButton.layer.cornerRadius = 10
         showAlertButton.addTarget(self, action: #selector(showAlertButtonTapped), for: .touchUpInside)
-        showAlertButton.translatesAutoresizingMaskIntoConstraints = false
         return showAlertButton
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .orange
@@ -46,9 +44,9 @@ class InfoViewController: UIViewController {
     }
     
     private func setupSubviews() {
-            view.addSubview(infoLabel)
-            view.addSubview(showAlertButton)
-        }
+        view.addSubviews([infoLabel,
+                          showAlertButton])
+    }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -63,39 +61,39 @@ class InfoViewController: UIViewController {
             showAlertButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
+    
+    @objc private func showAlertButtonTapped() {
+        showCustomAlert()
+    }
+    
+    @objc private func closeButtonTapped() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    private func showCustomAlert() {
+        let alertController = UIAlertController(
+            title: "Согласие",
+            message: "Вы соглашаетесь, потому что вы не можете не согласиться",
+            preferredStyle: .alert
+        )
         
-        @objc private func showAlertButtonTapped() {
-            showCustomAlert()
+        let firstAction = UIAlertAction(
+            title: "Согласен",
+            style: .default
+        ) { _ in
+            print("Пользователь нажал 'Согласен'")
         }
         
-        @objc private func closeButtonTapped() {
-            dismiss(animated: true, completion: nil)
+        let secondAction = UIAlertAction(
+            title: "Подтверждаю",
+            style: .destructive
+        ) { _ in
+            print("Пользователь нажал 'Подтвердить'")
         }
         
-        private func showCustomAlert() {
-            let alertController = UIAlertController(
-                title: "Согласие",
-                message: "Вы соглашаетесь, потому что вы не можете не согласиться",
-                preferredStyle: .alert
-            )
-            
-            let firstAction = UIAlertAction(
-                title: "Согласен",
-                style: .default
-            ) { _ in
-                print("Пользователь нажал 'Согласен'")
-            }
-            
-            let secondAction = UIAlertAction(
-                title: "Подтверждаю",
-                style: .destructive
-            ) { _ in
-                print("Пользователь нажал 'Подтвердить'")
-            }
-            
-            alertController.addAction(firstAction)
-            alertController.addAction(secondAction)
-            
-            present(alertController, animated: true, completion: nil)
-        }
+        alertController.addAction(firstAction)
+        alertController.addAction(secondAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
 }

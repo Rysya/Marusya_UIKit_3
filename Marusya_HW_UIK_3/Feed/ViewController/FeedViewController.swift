@@ -1,21 +1,21 @@
 import UIKit
 
-class FeedViewController: UIViewController {
+final class FeedViewController: UIViewController {
     
-    private let samplePost = Post(
-            author: "leon",
-            title: "Пост от leon",
-            description: "Это содержимое первого поста от leon в этом приложении. Здесь может быть длинный текст с интересной информацией, о том как leon счастливо живет или что-то в этом роде.",
-            imageName: "leon",
-            likes: 120,
-            views: 5400
-        )
+    private var samplePost = Post(
+        id: 100,
+        author: "leon",
+        title: "Пост от leon",
+        description: "Это содержимое первого поста от leon в этом приложении. Здесь может быть длинный текст с интересной информацией, о том как leon счастливо живет или что-то в этом роде.",
+        imageName: "leon",
+        likes: 120,
+        views: 5400
+    )
     
     private let feedStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 10
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
@@ -56,7 +56,7 @@ class FeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Лента пользователя"
-        self.view.backgroundColor = .systemBlue
+        self.view.backgroundColor = .vk
         
         setupSubviews()
         setupConstraint()
@@ -77,8 +77,12 @@ class FeedViewController: UIViewController {
     }
     
     @objc private func showPostButtonTapped() {
-        let postViewController = PostViewController(post: samplePost)
-            
+        let postViewController = PostViewController(post: samplePost) { [weak self] in
+            guard let self else { return 0 }
+            samplePost.likes += 1
+            return samplePost.likes
+        }
+        
         navigationController?.pushViewController(postViewController, animated: true)
     }
 }

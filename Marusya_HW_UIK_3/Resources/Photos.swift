@@ -1,6 +1,6 @@
 import Foundation
 
-class PhotosArh {
+final class PhotosArh {
     var photos: [String] = []
     
     init() {
@@ -8,7 +8,7 @@ class PhotosArh {
     }
 }
 
-class PhotosFlw {
+final class PhotosFlw {
     var photos: [String] = []
     
     init() {

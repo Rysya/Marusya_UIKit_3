@@ -1,6 +1,6 @@
 import UIKit
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController, PostTableViewCellDelegate {
     
     private let dataStore = DataStore()
     
@@ -21,7 +21,8 @@ class ProfileViewController: UIViewController {
         view.layer.shadowOpacity = 1
         view.layer.masksToBounds = false
         view.addSubviews([avatarImageView])
-        avatarImageTopConstraint = avatarImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16)
+        avatarImageTopConstraint = avatarImageView.topAnchor.constraint(equalTo: view.topAnchor,
+                                                                        constant: 16)
         avatarImageLeadingConstraint = avatarImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
         avatarImageWidthConstraint = avatarImageView.widthAnchor.constraint(equalToConstant: 120)
         avatarImageHeightConstraint = avatarImageView.heightAnchor.constraint(equalToConstant: 120)
@@ -56,13 +57,13 @@ class ProfileViewController: UIViewController {
         tableView.delegate = self
         tableView.allowsSelection = false
         tableView.sectionHeaderTopPadding = 0.2
+        tableView.tableHeaderView = profileHeaderView
         tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: PhotosTableViewCell.id)
         tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.id)
-        tableView.tableHeaderView = profileHeaderView
         return tableView
     }()
     
-    private lazy var newButton: UIButton = {
+    private let newButton: UIButton = {
         let newButton = UIButton()
         newButton.setTitle("Новая нижняя кнопка", for: .normal)
         newButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -73,13 +74,13 @@ class ProfileViewController: UIViewController {
         return newButton
     }()
     
-    private var profileView: ProfileHeaderView = {
+    private let profileView: ProfileHeaderView = {
         let profileView = ProfileHeaderView()
         profileView.backgroundColor = .darkGray
         return profileView
     }()
     
-    private var backgroundImageView: UIView = {
+    private let backgroundImageView: UIView = {
         let backgroundImageView = UIView()
         backgroundImageView.backgroundColor = .black
         backgroundImageView.layer.opacity = 0
@@ -97,7 +98,6 @@ class ProfileViewController: UIViewController {
     }()
     
     override func viewDidLoad() {
-        navigationController?.setNavigationBarHidden(true, animated: false)
         super.viewDidLoad()
         title = "Профиль пользователя"
         self.view.backgroundColor = .backgroundProfileGray
@@ -106,7 +106,18 @@ class ProfileViewController: UIViewController {
         setupConstraints()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tableView.reloadData()
+    }
+    
     // MARK: - Настройка жестов
+    
     private func setupGestureRecognizers(imageView: UIImageView) {
         imageView.isUserInteractionEnabled = true
         let tapGestureRecognizer = UITapGestureRecognizer()
@@ -117,47 +128,47 @@ class ProfileViewController: UIViewController {
     }
     
     // MARK: - Обработка жеста Tap (нажатие)
-    @objc func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
-        if let tappedView = gestureRecognizer.view {
-            avatarImageView.removeFromSuperview()
-            view.addSubviews([tappedView])
-            self.view.bringSubviewToFront(tappedView)
-            avatarImageTopConstraint.isActive = true
-            avatarImageLeadingConstraint.isActive = true
+    
+    @objc private func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
+        guard let tappedView = gestureRecognizer.view else { return }
+        avatarImageView.removeFromSuperview()
+        view.addSubviews([tappedView])
+        self.view.bringSubviewToFront(tappedView)
+        avatarImageTopConstraint.isActive = true
+        avatarImageLeadingConstraint.isActive = true
+        self.view.layoutIfNeeded()
+        avatarImageTopConstraint.isActive = false
+        avatarImageLeadingConstraint.isActive = false
+        avatarImageWidthConstraint.isActive = false
+        avatarImageHeightConstraint.isActive = false
+        avatarImageCenterXConstraint = tappedView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
+        avatarImageCenterYConstraint = tappedView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
+        avatarImageWidthConstraint = tappedView.widthAnchor.constraint(equalTo: view.widthAnchor)
+        avatarImageHeightConstraint = tappedView.heightAnchor.constraint(equalTo: view.widthAnchor)
+        avatarImageCenterXConstraint.isActive = true
+        avatarImageCenterYConstraint.isActive = true
+        avatarImageWidthConstraint.isActive = true
+        avatarImageHeightConstraint.isActive = true
+        self.backgroundImageView.isHidden = false
+        UIView.animate(withDuration: 0.5) {
+            self.view.setNeedsLayout()
             self.view.layoutIfNeeded()
-            avatarImageTopConstraint.isActive = false
-            avatarImageLeadingConstraint.isActive = false
-            avatarImageWidthConstraint.isActive = false
-            avatarImageHeightConstraint.isActive = false
-            avatarImageCenterXConstraint = tappedView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
-            avatarImageCenterYConstraint = tappedView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
-            avatarImageWidthConstraint = tappedView.widthAnchor.constraint(equalTo: view.widthAnchor)
-            avatarImageHeightConstraint = tappedView.heightAnchor.constraint(equalTo: view.widthAnchor)
-            avatarImageCenterXConstraint.isActive = true
-            avatarImageCenterYConstraint.isActive = true
-            avatarImageWidthConstraint.isActive = true
-            avatarImageHeightConstraint.isActive = true
-            self.backgroundImageView.isHidden = false
-            UIView.animate(withDuration: 0.5) {
-                self.view.setNeedsLayout()
-                self.view.layoutIfNeeded()
-                tappedView.layer.cornerRadius = 0
-                self.backgroundImageView.layer.opacity = 0.8
-            } completion: { _ in
-                UIView.animate(withDuration: 0.3) {
-                    self.bigAvatarImageCloseButton.layer.opacity = 1
-                    self.bigAvatarImageCloseButton.isHidden = false
-                }
+            tappedView.layer.cornerRadius = 0
+            self.backgroundImageView.layer.opacity = 0.8
+        } completion: { _ in
+            UIView.animate(withDuration: 0.3) {
+                self.bigAvatarImageCloseButton.layer.opacity = 1
+                self.bigAvatarImageCloseButton.isHidden = false
             }
         }
     }
     
-    @objc func handleCloseBigAvatarImage() {
+    @objc private func handleCloseBigAvatarImage() {
         UIView.animate(withDuration: 0.3) {
             self.bigAvatarImageCloseButton.layer.opacity = 0
         } completion: { _ in
             self.bigAvatarImageCloseButton.isHidden = true
-
+            
             self.avatarImageCenterXConstraint.isActive = true
             self.avatarImageCenterYConstraint.isActive = true
             self.view.layoutIfNeeded()
@@ -211,6 +222,7 @@ class ProfileViewController: UIViewController {
 }
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
             case 0:
@@ -233,7 +245,12 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
                 return cell
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.id, for: indexPath) as! PostTableViewCell
-                cell.setup(post: dataStore.models[indexPath.row])
+                cell.delegate = self
+                cell.setup(post: dataStore.models[indexPath.row]) { [weak self] in
+                    guard let self else { return 0 }
+                    self.dataStore.models[indexPath.row].likes += 1
+                    return self.dataStore.models[indexPath.row].likes
+                }
                 return cell
             default: return UITableViewCell()
         }
@@ -256,5 +273,38 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             case 0: return 36
             default: return 0
         }
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+    -> UISwipeActionsConfiguration? {
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "Удалить") {
+            (action, view, completionHandler) in
+            
+            self.dataStore.models.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            completionHandler(true)
+        }
+        
+        deleteAction.image = UIImage(systemName: "trash")
+        deleteAction.backgroundColor = .systemRed
+        
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+    
+    func didTapPostImage(in cell: PostTableViewCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        
+        let post = dataStore.models[indexPath.row]
+        let vc = PostViewController(post: post) { [weak self] in
+            guard let self else { return 0 }
+            self.dataStore.models[indexPath.row].likes += 1
+            return self.dataStore.models[indexPath.row].likes
+        }
+        
+        vc.view.backgroundColor = .white
+        navigationController?.pushViewController(vc, animated: true)
+        dataStore.models[indexPath.row].views += 1
     }
 }

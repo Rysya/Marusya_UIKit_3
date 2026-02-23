@@ -1,12 +1,12 @@
 import UIKit
 
-class ProfileHeaderView: UIView {
+final class ProfileHeaderView: UIView {
     
-    private var isKeyboardVisible = false
     private var isFirstClick = true
     private var isFirstLayout = true
+    private let statusService = StatusService()
     
-    private lazy var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = "Hipster Cat"
         titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
@@ -15,7 +15,7 @@ class ProfileHeaderView: UIView {
         return titleLabel
     }()
     
-    private lazy var statusLabel: UILabel = {
+    private let statusLabel: UILabel = {
         let statusLabel = UILabel()
         statusLabel.text = "Waiting for something..."
         statusLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -26,7 +26,7 @@ class ProfileHeaderView: UIView {
     
     private var isStatusVisibleOfTextFieldStatus = false
     
-    private lazy var textFieldStatus: UITextField = {
+    private let textFieldStatus: UITextField = {
         let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
         let textFieldStatus = UITextField()
         textFieldStatus.isUserInteractionEnabled = true
@@ -50,7 +50,7 @@ class ProfileHeaderView: UIView {
         showStatusButton.setTitle("Ввести новый статус", for: .normal)
         showStatusButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         showStatusButton.titleLabel?.textColor = .white
-        showStatusButton.backgroundColor = .systemBlue
+        showStatusButton.backgroundColor = .vk
         showStatusButton.setTitleColor(.white, for: .normal)
         showStatusButton.setTitleColor(.yellow, for: .highlighted)
         showStatusButton.layer.cornerRadius = 24
@@ -58,26 +58,72 @@ class ProfileHeaderView: UIView {
         showStatusButton.layer.shadowOffset = CGSize(width: 4, height: 4)
         showStatusButton.layer.shadowRadius = 4
         showStatusButton.layer.shadowOpacity = 0.7
-        showStatusButton.addTarget(self, action: #selector(setNewStatus), for: .touchUpInside)
-        showStatusButton.addTarget(self, action: #selector(showStatusButtonTouchDown), for: .touchDown)
-        showStatusButton.addTarget(self, action: #selector(showStatusButtonTouchUp), for: [.touchUpInside, .touchUpOutside, .touchCancel])
+        showStatusButton.addTarget(self,
+                                   action: #selector(setNewStatus),
+                                   for: .touchUpInside)
+        showStatusButton.addTarget(self,
+                                   action: #selector(showStatusButtonTouchDown),
+                                   for: .touchDown)
+        showStatusButton.addTarget(self,
+                                   action: #selector(showStatusButtonTouchUp),
+                                   for: [.touchUpInside, .touchUpOutside, .touchCancel])
         return showStatusButton
     }()
     
-    @objc private func setNewStatus() {
-        if isStatusVisibleOfTextFieldStatus {
-            isStatusVisibleOfTextFieldStatus = false
-            statusLabel.text = textFieldStatus.text
-            showStatusButton.setTitle("Ввести новый статус", for: .normal)
-        } else {
-            if textFieldStatus.text?.isEmpty == true, isFirstClick {
-                textFieldStatus.text = statusLabel.text
-                isFirstClick = false
-            }
-            isStatusVisibleOfTextFieldStatus = true
-            showStatusButton.setTitle("Установить новый статус", for: .normal)
-            self.showStatusButtonTopConstraint.isActive = false
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if isFirstLayout {
+            setupView()
+            isFirstLayout = false
         }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        endEditing(true)
+    }
+    
+    @objc private func setNewStatus() {
+        let statusHandler: () -> Void = { [self] in
+            showStatusButton.setTitle(isStatusVisibleOfTextFieldStatus
+                                      ? "Ввести новый статус"
+                                      : "Установить новый статус",
+                                      for: .normal)
+            isStatusVisibleOfTextFieldStatus.toggle()
+            if !isStatusVisibleOfTextFieldStatus {
+                textFieldStatus.placeholder = "Напишите статус"
+            }
+        }
+        if !isStatusVisibleOfTextFieldStatus,
+           textFieldStatus.text?.isEmpty == true,
+           isFirstClick {
+            textFieldStatus.text = ""
+            isFirstClick = false
+            textFieldStatus.isHidden = false
+            statusHandler()
+            return
+        }
+        do {
+            try statusService.isValidStatus(status: textFieldStatus.text ?? "")
+            if isStatusVisibleOfTextFieldStatus {
+                statusLabel.text = textFieldStatus.text
+            } else {
+                showStatusButtonTopConstraint.isActive = false
+                textFieldStatus.layer.borderColor = UIColor.black.cgColor
+            }
+            endEditing(true)
+            statusHandler()
+            animateButton()
+        } catch StatusError.emptyStatus {
+            textFieldStatus.isHidden = false
+            isStatusVisibleOfTextFieldStatus = true
+            showError(for: textFieldStatus, message: "Введите статус")
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    private func animateButton() {
         UIView.animate(withDuration: 0.2) {
             if self.isStatusVisibleOfTextFieldStatus {
                 self.showStatusButtonTopConstraint.isActive = false
@@ -114,7 +160,7 @@ class ProfileHeaderView: UIView {
         UIView.animate(withDuration: 0.1) {
             self.showStatusButton.transform = CGAffineTransform.identity
             self.showStatusButton.layer.shadowOpacity = 0.7
-            self.showStatusButton.backgroundColor = .systemBlue
+            self.showStatusButton.backgroundColor = .vk
         }
     }
     
@@ -127,12 +173,12 @@ class ProfileHeaderView: UIView {
         }
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if isFirstLayout {
-            setupView()
-            isFirstLayout = false
-        }
+    private func showError(for textField: UITextField, message: String) {
+        textField.shake()
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.error.cgColor
+        textField.layer.cornerRadius = 8
+        textField.placeholder = message
     }
     
     private func setupView() {
@@ -149,18 +195,25 @@ class ProfileHeaderView: UIView {
             titleLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor,
                                                 constant: 16 + 120 + 16),
             
-            statusLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 46),
-            statusLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16 + 120 + 16),
+            statusLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
+                                             constant: 46),
+            statusLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor,
+                                                 constant: 16 + 120 + 16),
             
-            textFieldStatus.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 16),
-            textFieldStatus.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16 + 120 + 16),
+            textFieldStatus.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
+                                                 constant: 80),
+            textFieldStatus.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor,
+                                                     constant: 6 + 120 + 16),
             textFieldStatus.heightAnchor.constraint(equalToConstant: 30),
-            textFieldStatus.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            textFieldStatus.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor,
+                                                      constant: -16),
             
             showStatusButtonTopConstraint,
             showStatusButton.heightAnchor.constraint(equalToConstant: 50),
-            showStatusButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            showStatusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
+            showStatusButton.trailingAnchor.constraint(equalTo: trailingAnchor,
+                                                       constant: -16),
+            showStatusButton.leadingAnchor.constraint(equalTo: leadingAnchor,
+                                                      constant: 16)
         ])
     }
 }
